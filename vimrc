@@ -5,7 +5,13 @@ set rtp+=/etc/vim/bundle/vundle
 call vundle#rc(expand('/etc/vim/bundle'))
 " Let vundle manage vundle, required
 Bundle 'gmarik/vundle'
+" for auto completion
 Bundle 'Valloric/YouCompleteMe'
+" show tree-style folder structure
+Bundle 'scrooloose/nerdtree'
+" syntax check
+Bundle 'scrooloose/syntastic'
+
 
 
 " Brief help of vundle
@@ -152,3 +158,44 @@ func InsertHeader()
 	endif
 endfunc
 command InsertHeader :call InsertHeader()
+
+
+" mouse behavior
+set mousemodel=popup
+set mouse=a
+
+" popup confirm when exit without saving or editing read-only file
+set confirm
+
+" NERD Tree setup -- a tree like file/folder hierarchy visualization tool
+autocmd vimenter * if !argc() | NERDTree | endif " if vim opened without file, show nerd tree for current folder
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if nerd tree is the only window left
+map <F3> :NERDTreeToggle<CR>
+imap <F3> <ESC> :NERDTreeToggle<CR>
+let NERDTreeIgnore=['\.pyc', '\.o']
+
+
+" Ctrl + C = copy
+" TODO vmap <C-c> "+y
+
+" Ctrl + W switch between windows
+map <C-w> <C-w>w
+
+" code folding
+autocmd FileType cpp set foldmethod=syntax
+autocmd FileType python set foldmethod=expr
+set nofoldenable
+
+" syntastic setup
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" pylint setup
+let g:syntastic_python_checkers=['pylint']
+let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
