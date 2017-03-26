@@ -11,7 +11,8 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'scrooloose/nerdtree'
 " syntax check
 Bundle 'scrooloose/syntastic'
-
+" auto format code
+Bundle 'Chiel92/vim-autoformat'
 
 
 " Brief help of vundle
@@ -94,7 +95,7 @@ func! CompileRunGcc()
 		exec "!g++ % -o %<"
 		exec "!time ./%<"
 	elseif &filetype == 'cpp'
-		exec "!g++ % -o %<"
+		exec "!g++ -std=c++11 % -o %<"
 		exec "!time ./%<"
 	elseif &filetype == 'java' 
 		exec "!javac %" 
@@ -199,3 +200,8 @@ let g:syntastic_check_on_wq = 0
 " pylint setup
 let g:syntastic_python_checkers=['pylint']
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+
+" auto formatting setup
+noremap <F3> :Autoformat<CR>
+autocmd FileType vim,tex let b:autoformat_autoindent=0
+
