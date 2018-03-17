@@ -1,10 +1,17 @@
 " Use vundle to manage plugin, required turn file type off and nocompatible
 filetype off
 set nocompatible
+<<<<<<< HEAD
 set rtp+=/etc/vim/bundle/Vundle.vim
 call vundle#rc(expand('/etc/vim/bundle'))
 " Let vundle manage vundle, required
 Bundle 'VundleVim/Vundle.vim'
+=======
+set rtp+=/etc/vim/bundle/vundle
+call vundle#rc(expand('/etc/vim/bundle'))
+" Let vundle manage vundle, required
+Bundle 'gmarik/vundle'
+>>>>>>> 4719e86d2d505d1af25e294a3cb06c25562ae509
 " for auto completion
 Bundle 'Valloric/YouCompleteMe'
 " show tree-style folder structure
@@ -103,7 +110,11 @@ func! CompileRunGcc()
 	elseif &filetype == 'sh'
 		:!time bash %
 	elseif &filetype == 'python'
+<<<<<<< HEAD
 		exec "!time python %"
+=======
+		exec "!time python2.7 %"
+>>>>>>> 4719e86d2d505d1af25e294a3cb06c25562ae509
     elseif &filetype == 'html'
         exec "!firefox % &"
     elseif &filetype == 'go'
@@ -162,18 +173,30 @@ command InsertHeader :call InsertHeader()
 
 
 " mouse behavior
+<<<<<<< HEAD
 " set mousemodel=popup
 " set mouse=a
+=======
+set mousemodel=popup
+set mouse=a
+>>>>>>> 4719e86d2d505d1af25e294a3cb06c25562ae509
 
 " popup confirm when exit without saving or editing read-only file
 set confirm
 
 " NERD Tree setup -- a tree like file/folder hierarchy visualization tool
+<<<<<<< HEAD
 set modifiable " nerdtree needs this to show/hide
 autocmd vimenter * if !argc() | NERDTree | endif " if vim opened without file, show nerd tree for current folder
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if nerd tree is the only window left
 map <F2> :NERDTreeToggle<CR>
 imap <F2> <ESC> :NERDTreeToggle<CR>
+=======
+autocmd vimenter * if !argc() | NERDTree | endif " if vim opened without file, show nerd tree for current folder
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if nerd tree is the only window left
+map <F3> :NERDTreeToggle<CR>
+imap <F3> <ESC> :NERDTreeToggle<CR>
+>>>>>>> 4719e86d2d505d1af25e294a3cb06c25562ae509
 let NERDTreeIgnore=['\.pyc', '\.o']
 
 
@@ -200,7 +223,11 @@ let g:syntastic_check_on_wq = 0
 
 " pylint setup
 let g:syntastic_python_checkers=['pylint']
+<<<<<<< HEAD
 let g:syntastic_python_pylint_args='-j 4 --disable=C0111,R0903,C0301,invalid-name,trailing-whitespace'
+=======
+let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+>>>>>>> 4719e86d2d505d1af25e294a3cb06c25562ae509
 
 " auto formatting setup
 noremap <F3> :Autoformat<CR>
