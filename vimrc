@@ -10,9 +10,10 @@ Bundle 'Valloric/YouCompleteMe'
 " show tree-style folder structure
 Bundle 'scrooloose/nerdtree'
 " syntax check
-Bundle 'scrooloose/syntastic'
+Bundle 'w0rp/ale'
 " auto format code
 Bundle 'Chiel92/vim-autoformat'
+
 
 
 " Brief help of vundle
@@ -76,15 +77,13 @@ filetype indent on
 
 " YouCompleteMe
 nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+" nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 let g:ycm_global_ycm_extra_conf = '/etc/vim/extra_configs/ycm_extra_conf.py'
-"Do not ask when starting vim
+" Do not ask when starting vim
 let g:ycm_confirm_extra_conf = 0
-" let g:syntastic_always_populate_loc_list = 1
-"
 
 set shortmess=atI   " remove advertisement  
-set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}   " content in status bar
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}  " content in status bar
 
 
 " press F5 key for compile and run
@@ -171,7 +170,6 @@ set confirm
 " NERD Tree setup -- a tree like file/folder hierarchy visualization tool
 set modifiable " nerdtree needs this to show/hide
 autocmd vimenter * if !argc() | NERDTree | endif " if vim opened without file, show nerd tree for current folder
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if nerd tree is the only window left
 map <F2> :NERDTreeToggle<CR>
 imap <F2> <ESC> :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc', '\.o']
@@ -188,21 +186,34 @@ autocmd FileType cpp set foldmethod=syntax
 autocmd FileType python set foldmethod=expr
 set nofoldenable
 
-" syntastic setup
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
+" syntastic setup with ale
+" always show sign columns
+let g:ale_sign_column_always = 1
+let g:ale_set_highlights = 0
+let g:ale_open_list = 1
+" customize error/warning sign
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+" integrate ale in vim status bar
+let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
+" show linter name, error, warning
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '%code: %%s [%linter%]'
+" jump to previous and next error/warning
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" After this is configured, :ALEFix will try and fix your JS code with ESLint.
+let g:ale_fixers = {
+\   'javascript': ['eslint'],
+\   'python': ['autopep8'],
+\}
 " pylint setup
-let g:syntastic_python_checkers=['pylint']
-let g:syntastic_python_pylint_args='-j 4 --disable=C0111,R0903,C0301,invalid-name,trailing-whitespace'
+let g:ale_python_pylint_options='-j 4 --disable=C0111,R0903,C0301,invalid-name,trailing-whitespace,too-many-arguments,too-many-locals,broad-except,cell-var-from-loop,bare-except,c-extension-no-member'
 
 " auto formatting setup
 noremap <F3> :Autoformat<CR>
 autocmd FileType vim,tex let b:autoformat_autoindent=0
 
+" auto-close all functional window if no edit window left
+autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(winbufnr(v:val), "&bt"))')) | qa! | endif
